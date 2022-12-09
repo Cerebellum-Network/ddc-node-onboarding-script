@@ -6,8 +6,9 @@
   "author": "Alejandro <abergasov@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build1": "npx tsc",
     "build": "npx tsc -p .",
+    "package": "rm -f bin/ddc_* && pkg . --output bin/ddc_onboarding_cli",
+    "release": "npm run build && npm run package",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublishOnly": "npm run build",
     "start": "ts-node-dev src/index.ts",
@@ -16,6 +17,19 @@
   "main": "dist/index.js",
   "bin": {
     "ddc_onboarding_cli": "./dist/index.js"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": [
+      "node_modules/figlet/fonts/Standard.flf"
+    ],
+    "targets": [
+      "node16-linux-arm64",
+      "node16-linux-x64",
+      "node16-macos-x64",
+      "node16-macos-arm64"
+    ],
+    "outputPath": "dist"
   },
   "dependencies": {
     "clear": "^0.1.0",
@@ -35,7 +49,8 @@
     "typescript": "^4.9.4",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.21",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "pkg": "^5.8.0"
   },
   "prettier": {
     "printWidth": 120,

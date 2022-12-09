@@ -13,7 +13,9 @@
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
+    //"resolveJsonModule": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": false,
     "importHelpers": true,
     "removeComments": true
   },
