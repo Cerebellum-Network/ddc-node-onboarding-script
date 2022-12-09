@@ -1,6 +1,8 @@
-# ddc_onboarding_cli
+# CLI script to up and run Storage/CDN Node
 
-#### Local run
-```bash
+### Quick start
+
+```shell
+yarn
 yarn start
 ```
