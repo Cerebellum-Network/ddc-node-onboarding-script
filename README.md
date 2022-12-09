@@ -6,3 +6,8 @@
 yarn
 yarn start
 ```
+
+### Run the latest version from registry:
+```shell
+npx @cere/ddc-onboarding-cli
+```
