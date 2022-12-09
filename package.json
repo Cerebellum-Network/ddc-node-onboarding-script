@@ -1,7 +1,7 @@
 {
   "name": "@cere/ddc-onboarding-cli",
   "description": "Cerebellum Network DDC onboard tool",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": "git@github.com:Cerebellum-Network/ddc_onboarding_cli.git",
   "author": "Alejandro <abergasov@gmail.com>",
   "license": "MIT",
@@ -9,6 +9,7 @@
     "build1": "npx tsc",
     "build": "npx tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build",
     "start": "ts-node-dev src/index.ts",
     "publish:npm": "npm publish --access public"
   },
