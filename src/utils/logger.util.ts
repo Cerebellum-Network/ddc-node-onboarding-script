@@ -1,7 +1,7 @@
 import { red, green, cyan } from 'kleur'
 import * as figlet from 'figlet'
 
-import { ConsoleMessage } from '../models/console-message'
+import { ConsoleMessage } from '../models/console_message'
 
 const newLine = '\n'
 
@@ -19,11 +19,7 @@ export const showSuccess = (message: string): void => {
 }
 
 export const showInfo = (message: string): void => {
-	console.info(cyan(ConsoleMessage.INFO) + message + newLine)
-}
-
-export const showGenerate = (fileName: string): void => {
-	console.log(cyan(ConsoleMessage.GENERATE) + `${fileName}...`)
+	console.info(cyan(ConsoleMessage.INFO) + message)
 }
 
 export const showCreate = (fileName: string, filePath: string): void => {

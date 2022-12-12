@@ -1,8 +1,9 @@
 import inquirer from 'inquirer'
 
-import { Answer, LogLevelValue } from '../../models/choice'
+import { LogLevelValue } from '../../models/choice'
+import { Config } from '../../models/config'
 
-export async function nodeConfig(): Promise<Answer> {
+export async function fillNodeConfig(): Promise<Config> {
 	return inquirer.prompt([
 		// log section
 		{
