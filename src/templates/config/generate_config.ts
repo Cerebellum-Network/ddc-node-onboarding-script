@@ -10,7 +10,7 @@ export function generateConfig(dataPath: string, blockChainConfig: BlockchainCon
 	showInfo('Generating node config...')
 	const configPath = dataPathPrefix + '/config'
 	checkIfDirExistElseMakeDir(configPath)
-	const configFilePath = configPath + '/config.yaml'
+	const configFilePath = configPath + '/config.yml'
 	writeYamlFile.sync(configFilePath, {
 		log: {
 			level: nodeConfig.logLevel,
