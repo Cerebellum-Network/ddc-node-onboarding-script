@@ -1,33 +1,40 @@
 export interface Answer {
-    network: NetworkValue;
-    nodeType: NodeTypeValue;
-    walletType: WalletTypeValue;
-    walletImportType: WalletImportTypeValue;
-    walletConfirm: boolean;
+	network: NetworkValue
+	nodeType: NodeTypeValue
+	walletType: WalletTypeValue
+	walletImportPayload: string // seed phrase here
+	walletConfirm: string
+	useDefaultConfig: boolean
+	httpPort: number
+	storagePath: string
 }
 
 export interface Choice {
-    name: string;
-    value: WalletImportTypeValue | WalletTypeValue | NetworkValue | NodeTypeValue;
+	name: string
+	value: WalletTypeValue | NetworkValue | NodeTypeValue
 }
 
 export enum NetworkValue {
-    MAINNET = 'Mainnet',
-    TESTNET = 'Testnet',
+	MAINNET = 'Mainnet',
+	TESTNET = 'Testnet',
 }
 
 export enum NodeTypeValue {
-    CDN = 'CDN',
-    Storage = 'Storage',
+	CDN = 'CDN',
+	Storage = 'Storage',
 }
 
 export enum WalletTypeValue {
-    New = 'New',
-    Existing = 'Existing',
+	New = 'New',
+	Existing = 'Existing',
 }
 
-export enum WalletImportTypeValue {
-    Seed = 'Seed',
-    PrivateKey = 'PrivateKey',
+export enum LogLevelValue {
+	Info = 'info',
+	Trace = 'trace',
+	Debug = 'debug',
+	Warning = 'warning',
+	Error = 'error',
+	Fatal = 'fatal',
+	Panic = 'panic',
 }
-

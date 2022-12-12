@@ -1,1 +1,1 @@
-export * from './cdn_node.actions';
+export * from './cdn_node.actions'
