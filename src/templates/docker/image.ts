@@ -49,6 +49,8 @@ export async function downloadAndStartDockerImage(
 		...['-v', `${nodeConfigPath}:/ddc-cdn-node/config:rw`],
 		dockerImage,
 	])
+	showInfo('========================================')
 	showInfo(`Docker image '${dockerImage}' started successfully`)
 	showInfo(`You can check logs with 'docker logs -f ${containerName}'`)
+	showInfo('========================================')
 }
