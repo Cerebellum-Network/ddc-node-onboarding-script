@@ -3,3 +3,4 @@ node_modules
 dist/
 bin/
 yarn-error.log
+go.mod

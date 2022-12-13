@@ -18,7 +18,7 @@ export async function notifyAboutNewNode(network: NetworkValue, publicKey: strin
 			method: 'POST',
 			body: JSON.stringify({
 				publicKey: publicKey,
-				address: nodeAddress,
+				url: nodeAddress,
 			}),
 			headers: {
 				'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function notifyAboutNewNode(network: NetworkValue, publicKey: strin
 		})
 
 		const result = (await response.json()) as CreateCertificationResponse
-		if (result.code !== '200') {
+		if (result.code !== 'SUCCESS') {
 			showError(`Error! code: ${result.code}`)
 		} else {
 			showInfo(`Certification created. Id: ${result.data.id}`)

@@ -9,7 +9,9 @@ export interface Answer {
 	httpPort: number
 	storagePath: string
 	notifyClusterManager: boolean
-	checkAddressCorrect: string
+	nodeAddress: string
+	nodeHTTPS: boolean
+	nodeURL: string
 }
 
 export enum NetworkValue {

@@ -40,8 +40,6 @@ export async function downloadAndStartDockerImage(
 	await runCommand('docker', ['rm', '-f', containerName])
 
 	showInfo(`Starting docker image '${dockerImage}'...`)
-	console.log(`mount path ${nodeConfigPath}`)
-	console.log(`mount path ${nodeStoragePath}`)
 	await runCommand('docker', [
 		...['run', '-d'], // such wired syntax is used to avoid pretifier format and keep params in pairs
 		...['--name', containerName],

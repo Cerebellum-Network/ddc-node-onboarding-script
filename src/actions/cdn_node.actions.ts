@@ -17,7 +17,7 @@ import { walletBackupConfirm } from '../questions/wallet/backup_confirm.question
 import { checkSeed } from '../questions/wallet/seed_check'
 import { notifyClusterManager } from '../questions/cluster_manager/ask_notify.question'
 import { getAddress } from '../templates/cluster_manager/get_address'
-import { checkAddressCorrect } from '../questions/cluster_manager/check_address.question'
+import { checkNodeAddress } from '../questions/cluster_manager/check_address.question'
 
 export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 	let seedPhrase = '',
@@ -88,8 +88,8 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 	const notify = await notifyClusterManager()
 	if (notify.notifyClusterManager) {
 		const address = await getAddress()
-		const result = await checkAddressCorrect(`${address}:${nodeConfig.httpPort}`)
-		await notifyAboutNewNode(networkType, publicKey, result.checkAddressCorrect)
+		const result = await checkNodeAddress(`${address}:${nodeConfig.httpPort}`)
+		await notifyAboutNewNode(networkType, publicKey, result.nodeURL)
 	}
 }
 
