@@ -11,12 +11,15 @@ type CreateCertificationResponse = {
 	}
 }
 
-export async function notifyAboutNewNode(network: NetworkValue, publicKey: string) {
-	showInfo(`Notify clusterManager about new node. Use public key: ${publicKey}`)
+export async function notifyAboutNewNode(network: NetworkValue, publicKey: string, nodeAddress: string): Promise<void> {
+	showInfo(`Notify clusterManager about new node. Address: ${nodeAddress}. Use public key: ${publicKey}`)
 	try {
 		const response = await fetch(`${getClusterManagerDomain(network)}/certification`, {
 			method: 'POST',
-			body: JSON.stringify({ publicKey: publicKey }),
+			body: JSON.stringify({
+				publicKey: publicKey,
+				address: nodeAddress,
+			}),
 			headers: {
 				'Content-Type': 'application/json',
 				Accept: 'application/json',

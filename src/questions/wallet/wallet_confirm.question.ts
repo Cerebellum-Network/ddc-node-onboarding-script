@@ -8,7 +8,7 @@ export async function walletConfirm(address: string): Promise<Answer> {
 			name: 'walletConfirm',
 			type: 'input',
 			message: `Is this correct address ${address}? (yes|no)`,
-			validate(input: any): boolean | Promise<boolean> {
+			validate(input: string): boolean | Promise<boolean> {
 				input = input.toLowerCase()
 				return input == 'yes' || input == 'no' || input == 'y' || input == 'n'
 			},

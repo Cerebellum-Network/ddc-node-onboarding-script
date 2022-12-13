@@ -13,7 +13,8 @@
 		"prepublishOnly": "npm run build",
 		"start": "ts-node-dev src/index.ts",
 		"publish:npm": "npm publish --access public",
-		"format": "yarn prettier --write ."
+		"format": "yarn prettier --write .",
+		"lint": "eslint . --ext .ts"
 	},
 	"main": "dist/index.js",
 	"bin": {
@@ -53,6 +54,9 @@
 		"@types/inquirer": "^9.0.3",
 		"@types/node": "^18.11.11",
 		"@types/node-fetch": "^2.6.2",
+		"@typescript-eslint/eslint-plugin": "^5.46.1",
+		"@typescript-eslint/parser": "^5.46.1",
+		"eslint": "^8.29.0",
 		"pkg": "^5.8.0",
 		"ts-node": "^10.9.1",
 		"ts-node-dev": "^2.0.0",

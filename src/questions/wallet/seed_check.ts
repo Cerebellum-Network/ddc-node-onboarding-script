@@ -1,23 +1,20 @@
 import inquirer, { Question } from 'inquirer'
 
-export async function checkSeed(seed: string): Promise<any> {
-	return inquirer.prompt(getRandomWords(seed.split(' ')))
+export async function checkSeed(seed: string): Promise<void> {
+	await inquirer.prompt(getRandomWords(seed.split(' ')))
 }
 
 function getRandomWords(seedArray: string[]): Question[] {
 	const result = []
 	const usedIndexes = new Map()
 	let counter = 0
-	while (true) {
+	while (counter < 3) {
 		const randomIndex = Math.floor(Math.random() * seedArray.length)
 		if (usedIndexes.has(randomIndex)) {
 			continue
 		}
 		usedIndexes.set(randomIndex, true)
 		counter++
-		if (counter > 3) {
-			break
-		}
 		result.push({
 			name: 'checkSeed_' + randomIndex.toString(),
 			type: 'input',

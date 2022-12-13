@@ -1,6 +1,6 @@
 import { showInfo } from '../../utils/logger.util'
 import { Keyring } from '@polkadot/keyring'
-import { bip39Generate, bip39ToSeed, waitReady } from '@polkadot/wasm-crypto'
+import { bip39Generate, waitReady } from '@polkadot/wasm-crypto'
 import { KeyringPair } from '@polkadot/keyring/types'
 
 export async function generateNewWallet(): Promise<[KeyringPair, string]> {

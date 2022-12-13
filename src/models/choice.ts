@@ -8,11 +8,8 @@ export interface Answer {
 	useDefaultConfig: boolean
 	httpPort: number
 	storagePath: string
-}
-
-export interface Choice {
-	name: string
-	value: WalletTypeValue | NetworkValue | NodeTypeValue
+	notifyClusterManager: boolean
+	checkAddressCorrect: string
 }
 
 export enum NetworkValue {

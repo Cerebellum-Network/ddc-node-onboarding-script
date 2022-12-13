@@ -3,7 +3,6 @@ import { walletQuestion } from '../questions/wallet/wallet_type.question'
 import { generateNewWallet } from '../templates/wallet/generate_new'
 import { importWallet } from '../templates/wallet/import'
 import { walletImportQuestion } from '../questions/wallet/wallet_import.question'
-import { KeyringPair } from '@polkadot/keyring/types'
 import { walletConfirm } from '../questions/wallet/wallet_confirm.question'
 import { fillNodeConfig } from '../questions/config/config.questions'
 import { useDefaultConfig } from '../questions/config/use_default.question'
@@ -16,17 +15,22 @@ import { downloadAndStartDockerImage } from '../templates/docker/image'
 import { notifyAboutNewNode } from '../templates/cluster_manager/notify_about_new_node'
 import { walletBackupConfirm } from '../questions/wallet/backup_confirm.question'
 import { checkSeed } from '../questions/wallet/seed_check'
+import { notifyClusterManager } from '../questions/cluster_manager/ask_notify.question'
+import { getAddress } from '../templates/cluster_manager/get_address'
+import { checkAddressCorrect } from '../questions/cluster_manager/check_address.question'
 
-export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
+export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 	let seedPhrase = '',
-		publicKey = ''
+		publicKey = '',
+		valid = false
 	const walletType: Answer = await walletQuestion()
 	if (walletType.walletType === WalletTypeValue.New) {
 		const [keyPair, seed] = await generateNewWallet()
-		while (true) {
+		while (!valid) {
 			// generate seed phrase and wait confirmation that user backed up it
 			const confirm: Answer = await walletBackupConfirm(seed)
-			if (checkAnswerYes(confirm.walletBackupConfirm)) {
+			valid = checkAnswerYes(confirm.walletBackupConfirm)
+			if (valid) {
 				await checkSeed(seed)
 				seedPhrase = seed
 				publicKey = keyPair.publicKey.toString()
@@ -36,7 +40,7 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 			}
 		}
 	} else if (walletType.walletType === WalletTypeValue.Existing) {
-		while (true) {
+		while (!valid) {
 			// import key and wait confirmation from user that address is correct
 			const walletImport = await walletImportQuestion()
 			const [keyPair, ok] = importWallet(walletImport.walletImportPayload)
@@ -44,7 +48,8 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 				continue
 			}
 			const confirmations = await walletConfirm(keyPair.address)
-			if (checkAnswerYes(confirmations.walletConfirm)) {
+			valid = checkAnswerYes(confirmations.walletConfirm)
+			if (valid) {
 				seedPhrase = walletImport.walletImportPayload
 				publicKey = keyPair.publicKey.toString()
 				break
@@ -65,6 +70,7 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 	const storagePath = await getStoragePath()
 	const blockChainConfig = generateBlockChainConfig(networkType, seedPhrase)
 
+	showInfo('Config generated. Generating config file...')
 	// generate config file
 	try {
 		const filePath = generateConfig(storagePath.storagePath, blockChainConfig, nodeConfig)
@@ -74,11 +80,17 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 		process.exit(1) // we can't rewrite file, exit script
 	}
 	// node start
+	showInfo('Starting node...')
 	const [nodeConfigPath, nodeStoragePath] = getConfigAndStoragePath(storagePath.storagePath)
 	await downloadAndStartDockerImage(networkType, nodeConfig.httpPort, nodeConfigPath, nodeStoragePath)
 
-	// notify cluste manager about new node start
-	notifyAboutNewNode(networkType, publicKey)
+	// notify cluster manager about new node start
+	const notify = await notifyClusterManager()
+	if (notify.notifyClusterManager) {
+		const address = await getAddress()
+		const result = await checkAddressCorrect(`${address}:${nodeConfig.httpPort}`)
+		await notifyAboutNewNode(networkType, publicKey, result.checkAddressCorrect)
+	}
 }
 
 function checkAnswerYes(answer: string): boolean {

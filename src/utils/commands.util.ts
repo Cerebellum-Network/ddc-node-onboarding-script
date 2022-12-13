@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process'
 import { showError } from './logger.util'
 
 export async function runCommand(binary: string, args: string[]): Promise<number> {
-	return new Promise<number>((resolve, reject) => {
+	return new Promise<number>((resolve) => {
 		const cmd = spawn(binary, args, {
 			detached: true,
 			stdio: ['inherit', 'inherit', 'inherit'],
@@ -14,7 +14,7 @@ export async function runCommand(binary: string, args: string[]): Promise<number
 			}
 			resolve(code)
 		})
-		cmd.on('error', (err: any) => {
+		cmd.on('error', (err: Error) => {
 			showError('Error while running command: ' + err)
 			process.exit(1)
 		})

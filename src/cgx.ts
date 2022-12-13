@@ -5,7 +5,7 @@ import { nodeTypeQuestion } from './questions/note_type.question'
 import { ConsoleMessage } from './models/console_message'
 import { cdnNodeActions } from './actions'
 
-export async function CGX(): Promise<any> {
+export async function CGX(): Promise<void> {
 	showTitleAndBanner()
 
 	const networkAnswer: Answer = await networkQuestion()
