@@ -21,7 +21,7 @@ import { checkNodeAddress } from '../questions/cluster_manager/check_address.que
 
 export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 	let seedPhrase = '',
-		publicKey = '',
+		walletAddress = '',
 		valid = false
 	const walletType: Answer = await walletQuestion()
 	if (walletType.walletType === WalletTypeValue.New) {
@@ -33,7 +33,7 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 			if (valid) {
 				await checkSeed(seed)
 				seedPhrase = seed
-				publicKey = keyPair.publicKey.toString()
+				walletAddress = keyPair.address
 				showInfo('Seed phrase confirmed.')
 				showInfo(`Address of your wallet: ${keyPair.address}`)
 				break
@@ -51,7 +51,7 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 			valid = checkAnswerYes(confirmations.walletConfirm)
 			if (valid) {
 				seedPhrase = walletImport.walletImportPayload
-				publicKey = keyPair.publicKey.toString()
+				walletAddress = keyPair.address
 				break
 			}
 		}
@@ -89,7 +89,7 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 	if (notify.notifyClusterManager) {
 		const address = await getAddress()
 		const result = await checkNodeAddress(`${address}:${nodeConfig.httpPort}`)
-		await notifyAboutNewNode(networkType, publicKey, result.nodeURL)
+		await notifyAboutNewNode(networkType, walletAddress, result.nodeURL)
 	}
 }
 
