@@ -4,6 +4,7 @@ export interface Answer {
 	walletType: WalletTypeValue
 	walletImportPayload: string // seed phrase here
 	walletConfirm: string
+	walletBackupConfirm: string
 	useDefaultConfig: boolean
 	httpPort: number
 	storagePath: string

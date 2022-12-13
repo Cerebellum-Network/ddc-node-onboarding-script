@@ -13,13 +13,28 @@ import { generateBlockChainConfig } from '../templates/blockchain/get_blockchain
 import { generateConfig, getConfigAndStoragePath, getDefaultConfig } from '../templates/config/generate_config'
 import { showError, showInfo } from '../utils/logger.util'
 import { downloadAndStartDockerImage } from '../templates/docker/image'
+import { notifyAboutNewNode } from '../templates/cluster_manager/notify_about_new_node'
+import { walletBackupConfirm } from '../questions/wallet/backup_confirm.question'
+import { checkSeed } from '../questions/wallet/seed_check'
 
 export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
-	let seedPhrase = ''
+	let seedPhrase = '',
+		publicKey = ''
 	const walletType: Answer = await walletQuestion()
 	if (walletType.walletType === WalletTypeValue.New) {
-		generateNewWallet()
-		seedPhrase = 'todo it'
+		const [keyPair, seed] = await generateNewWallet()
+		while (true) {
+			// generate seed phrase and wait confirmation that user backed up it
+			const confirm: Answer = await walletBackupConfirm(seed)
+			if (checkAnswerYes(confirm.walletBackupConfirm)) {
+				await checkSeed(seed)
+				seedPhrase = seed
+				publicKey = keyPair.publicKey.toString()
+				showInfo('Seed phrase confirmed.')
+				showInfo(`Address of your wallet: ${keyPair.address}`)
+				break
+			}
+		}
 	} else if (walletType.walletType === WalletTypeValue.Existing) {
 		while (true) {
 			// import key and wait confirmation from user that address is correct
@@ -29,15 +44,14 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 				continue
 			}
 			const confirmations = await walletConfirm(keyPair.address)
-			if (
-				confirmations.walletConfirm.toLowerCase() === 'yes' ||
-				confirmations.walletConfirm.toLowerCase() === 'y'
-			) {
+			if (checkAnswerYes(confirmations.walletConfirm)) {
 				seedPhrase = walletImport.walletImportPayload
+				publicKey = keyPair.publicKey.toString()
 				break
 			}
 		}
 	}
+	showInfo('Wallet created. Generating config...')
 
 	// node config generation
 	let nodeConfig = getDefaultConfig()
@@ -62,4 +76,11 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 	// node start
 	const [nodeConfigPath, nodeStoragePath] = getConfigAndStoragePath(storagePath.storagePath)
 	await downloadAndStartDockerImage(networkType, nodeConfig.httpPort, nodeConfigPath, nodeStoragePath)
+
+	// notify cluste manager about new node start
+	notifyAboutNewNode(networkType, publicKey)
+}
+
+function checkAnswerYes(answer: string): boolean {
+	return answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y'
 }
