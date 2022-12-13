@@ -10,8 +10,9 @@ import { useDefaultConfig } from '../questions/config/use_default.question'
 import { getPort } from '../questions/config/port.question'
 import { getStoragePath } from '../questions/config/storage.question'
 import { generateBlockChainConfig } from '../templates/blockchain/get_blockchain_config'
-import { generateConfig, getDefaultConfig } from '../templates/config/generate_config'
+import { generateConfig, getConfigAndStoragePath, getDefaultConfig } from '../templates/config/generate_config'
 import { showError, showInfo } from '../utils/logger.util'
+import { downloadAndStartDockerImage } from '../templates/docker/image'
 
 export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 	let seedPhrase = ''
@@ -59,4 +60,6 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<any> {
 		process.exit(1) // we can't rewrite file, exit script
 	}
 	// node start
+	const [nodeConfigPath, nodeStoragePath] = getConfigAndStoragePath(storagePath.storagePath)
+	await downloadAndStartDockerImage(networkType, nodeConfig.httpPort, nodeConfigPath, nodeStoragePath)
 }

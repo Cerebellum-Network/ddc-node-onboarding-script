@@ -6,10 +6,10 @@ import { checkIfDirExistElseMakeDir } from '../../utils/checker.util'
 import writeYamlFile = require('write-yaml-file')
 
 export function generateConfig(dataPath: string, blockChainConfig: BlockchainConfig, nodeConfig: Config): string {
-	const dataPathPrefix = dataPath.replace(/\/*$/, '') + '/ddc'
 	showInfo('Generating node config...')
-	const configPath = dataPathPrefix + '/config'
-	checkIfDirExistElseMakeDir(configPath)
+	const [configPath, storagePath] = getConfigAndStoragePath(dataPath)
+	checkIfDirExistElseMakeDir(configPath) // node config will be here
+	checkIfDirExistElseMakeDir(storagePath) // node data will be here
 	const configFilePath = configPath + '/config.yml'
 	writeYamlFile.sync(configFilePath, {
 		log: {
@@ -28,7 +28,7 @@ export function generateConfig(dataPath: string, blockChainConfig: BlockchainCon
 			path: configPath,
 		},
 		badger: {
-			path: dataPathPrefix + '/data',
+			path: storagePath,
 		},
 		blockchain: {
 			'api-url': blockChainConfig.apiURL,
@@ -58,4 +58,9 @@ export function getDefaultConfig(): Config {
 		httpMaxFrameSize: 5242880,
 		httpInitialWindowSize: 5242880,
 	}
+}
+
+export function getConfigAndStoragePath(basePath: string): [string, string] {
+	const dataPathPrefix = basePath.replace(/\/*$/, '') + '/ddc'
+	return [dataPathPrefix + '/config', dataPathPrefix + '/data']
 }
