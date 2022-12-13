@@ -41,5 +41,5 @@ function getClusterManagerDomain(network: NetworkValue): string {
 	if (network === NetworkValue.MAINNET) {
 		return 'https://cluster-management.dev.cere.io'
 	}
-	return 'https://cluster-management.dev.cere.io/'
+	return 'https://cluster-management.dev.cere.io'
 }
