@@ -4,10 +4,16 @@ import { Config } from '../../models/config'
 import { LogLevelValue } from '../../models/choice'
 import { checkIfDirExistElseMakeDir } from '../../utils/checker.util'
 import writeYamlFile = require('write-yaml-file')
+import { filePathConfig } from '../../models/file_path'
 
-export function generateConfig(dataPath: string, blockChainConfig: BlockchainConfig, nodeConfig: Config): string {
+export function generateConfig(
+	dataPath: string,
+	blockChainConfig: BlockchainConfig,
+	nodeConfig: Config,
+	filePathConf: filePathConfig,
+): string {
 	showInfo('Generating node config...')
-	const [configPath, storagePath] = getConfigAndStoragePath(dataPath)
+	const [configPath, storagePath] = getConfigAndStoragePath(dataPath, filePathConf)
 	checkIfDirExistElseMakeDir(configPath) // node config will be here
 	checkIfDirExistElseMakeDir(storagePath) // node data will be here
 	const configFilePath = configPath + '/config.yml'
@@ -60,7 +66,7 @@ export function getDefaultConfig(): Config {
 	}
 }
 
-export function getConfigAndStoragePath(basePath: string): [string, string] {
-	const dataPathPrefix = basePath.replace(/\/*$/, '') + '/ddc'
-	return [dataPathPrefix + '/config', dataPathPrefix + '/data']
+export function getConfigAndStoragePath(basePath: string, filePathConf: filePathConfig): [string, string] {
+	const dataPathPrefix = basePath.replace(/\/*$/, '')
+	return [dataPathPrefix + filePathConf.configPostfixPath, dataPathPrefix + filePathConf.badgerPostfixPath]
 }

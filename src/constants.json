@@ -1,0 +1,32 @@
+{
+	"filePath": {
+		"configPostfixPath": "/ddc/config",
+		"badgerPostfixPath": "/ddc/data"
+	},
+	"mainnet": {
+		"blockchain": {
+			"activityCaptureContract": "5GbMD1Nevv7H7e4UPhHqs8eyEk3eX6eidaY31rXDs3cZCrFW",
+			"apiURL": "wss://rpc.devnet.cere.network/ws",
+			"ddcBucketContract": "5GbMD1Nevv7H7e4UPhHqs8eyEk3eX6eidaY31rXDs3cZCrFW"
+		},
+		"dockerImage": {
+			"name": "ddc-cdn-node",
+			"tag": "dev-latest",
+			"registry": "cerebellumnetwork"
+		},
+		"clusterManagerURL": "https://cluster-management.dev.cere.io"
+	},
+	"testnet": {
+		"blockchain": {
+			"activityCaptureContract": "5GbMD1Nevv7H7e4UPhHqs8eyEk3eX6eidaY31rXDs3cZCrFW",
+			"apiURL": "wss://rpc.devnet.cere.network/ws",
+			"ddcBucketContract": "5GbMD1Nevv7H7e4UPhHqs8eyEk3eX6eidaY31rXDs3cZCrFW"
+		},
+		"dockerImage": {
+			"name": "ddc-cdn-node",
+			"tag": "dev-latest",
+			"registry": "cerebellumnetwork"
+		},
+		"clusterManagerURL": "https://cluster-management.dev.cere.io"
+	}
+}

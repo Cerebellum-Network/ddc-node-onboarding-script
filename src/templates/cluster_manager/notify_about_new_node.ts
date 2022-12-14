@@ -1,5 +1,4 @@
 import { showError, showInfo } from '../../utils/logger.util'
-import { NetworkValue } from '../../models/choice'
 import fetch from 'node-fetch'
 
 type CreateCertificationResponse = {
@@ -11,10 +10,14 @@ type CreateCertificationResponse = {
 	}
 }
 
-export async function notifyAboutNewNode(network: NetworkValue, publicKey: string, nodeAddress: string): Promise<void> {
+export async function notifyAboutNewNode(
+	clusterManagerURL: string,
+	publicKey: string,
+	nodeAddress: string,
+): Promise<void> {
 	showInfo(`Notify clusterManager about new node. Address: ${nodeAddress}. Use public key: ${publicKey}`)
 	try {
-		const response = await fetch(`${getClusterManagerDomain(network)}/certification`, {
+		const response = await fetch(`${clusterManagerURL}/certification`, {
 			method: 'POST',
 			body: JSON.stringify({
 				publicKey: publicKey,
@@ -35,11 +38,4 @@ export async function notifyAboutNewNode(network: NetworkValue, publicKey: strin
 	} catch (error) {
 		showError(`Error while create certification: ${error}`)
 	}
-}
-
-function getClusterManagerDomain(network: NetworkValue): string {
-	if (network === NetworkValue.MAINNET) {
-		return 'https://cluster-management.dev.cere.io'
-	}
-	return 'https://cluster-management.dev.cere.io'
 }

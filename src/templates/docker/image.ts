@@ -1,35 +1,16 @@
-import { NetworkValue } from '../../models/choice'
 import { showInfo } from '../../utils/logger.util'
 import { runCommand } from '../../utils/commands.util'
-
-interface DockerImage {
-	name: string
-	tag: string
-	registry: string
-}
-
-const devnetImage: DockerImage = {
-	name: 'ddc-cdn-node',
-	tag: 'dev-latest',
-	registry: 'cerebellumnetwork',
-}
-
-const mainnetImage: DockerImage = {
-	name: 'ddc-cdn-node',
-	tag: 'dev-latest',
-	registry: 'cerebellumnetwork',
-}
+import { DockerImage } from '../../models/docker_image'
 
 const containerName = 'ddc-cdn-node'
 
 export async function downloadAndStartDockerImage(
-	network: NetworkValue,
 	port: number,
 	nodeConfigPath: string,
 	nodeStoragePath: string,
+	dockerImageConfig: DockerImage,
 ) {
-	const image = network === NetworkValue.MAINNET ? mainnetImage : devnetImage
-	const dockerImage = `${image.registry}/${image.name}:${image.tag}`
+	const dockerImage = `${dockerImageConfig.registry}/${dockerImageConfig.name}:${dockerImageConfig.tag}`
 	showInfo(`Downloading docker image '${dockerImage}'...`)
 	await runCommand('docker', ['pull', dockerImage]).then(() => {
 		showInfo(`Docker image '${dockerImage}' downloaded successfully`)

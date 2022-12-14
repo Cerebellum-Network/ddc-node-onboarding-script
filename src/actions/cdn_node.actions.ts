@@ -1,4 +1,4 @@
-import { Answer, NetworkValue, WalletTypeValue } from '../models/choice'
+import { Answer, WalletTypeValue } from '../models/choice'
 import { walletQuestion } from '../questions/wallet/wallet_type.question'
 import { generateNewWallet } from '../templates/wallet/generate_new'
 import { importWallet } from '../templates/wallet/import'
@@ -8,7 +8,6 @@ import { fillNodeConfig } from '../questions/config/config.questions'
 import { useDefaultConfig } from '../questions/config/use_default.question'
 import { getPort } from '../questions/config/port.question'
 import { getStoragePath } from '../questions/config/storage.question'
-import { generateBlockChainConfig } from '../templates/blockchain/get_blockchain_config'
 import { generateConfig, getConfigAndStoragePath, getDefaultConfig } from '../templates/config/generate_config'
 import { showError, showInfo } from '../utils/logger.util'
 import { downloadAndStartDockerImage } from '../templates/docker/image'
@@ -18,8 +17,10 @@ import { checkSeed } from '../questions/wallet/seed_check'
 import { notifyClusterManager } from '../questions/cluster_manager/ask_notify.question'
 import { getAddress } from '../templates/cluster_manager/get_address'
 import { checkNodeAddress } from '../questions/cluster_manager/check_address.question'
+import { AppConfig } from '../models/app_config'
+import { filePathConfig } from '../models/file_path'
 
-export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
+export async function cdnNodeActions(appConf: AppConfig, filePathConf: filePathConfig): Promise<void> {
 	let seedPhrase = '',
 		walletAddress = '',
 		valid = false
@@ -68,12 +69,12 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 		nodeConfig = await fillNodeConfig()
 	}
 	const storagePath = await getStoragePath()
-	const blockChainConfig = generateBlockChainConfig(networkType, seedPhrase)
+	appConf.blockchain.secretPhrase = seedPhrase
 
 	showInfo('Config generated. Generating config file...')
 	// generate config file
 	try {
-		const filePath = generateConfig(storagePath.storagePath, blockChainConfig, nodeConfig)
+		const filePath = generateConfig(storagePath.storagePath, appConf.blockchain, nodeConfig, filePathConf)
 		showInfo(`Config file generated: ${filePath}`)
 	} catch (err) {
 		showError('File write failed with error: ' + err)
@@ -81,15 +82,15 @@ export async function cdnNodeActions(networkType: NetworkValue): Promise<void> {
 	}
 	// node start
 	showInfo('Starting node...')
-	const [nodeConfigPath, nodeStoragePath] = getConfigAndStoragePath(storagePath.storagePath)
-	await downloadAndStartDockerImage(networkType, nodeConfig.httpPort, nodeConfigPath, nodeStoragePath)
+	const [nodeConfigPath, nodeStoragePath] = getConfigAndStoragePath(storagePath.storagePath, filePathConf)
+	await downloadAndStartDockerImage(nodeConfig.httpPort, nodeConfigPath, nodeStoragePath, appConf.dockerImage)
 
 	// notify cluster manager about new node start
 	const notify = await notifyClusterManager()
 	if (notify.notifyClusterManager) {
 		const address = await getAddress()
 		const result = await checkNodeAddress(`${address}:${nodeConfig.httpPort}`)
-		await notifyAboutNewNode(networkType, walletAddress, result.nodeURL)
+		await notifyAboutNewNode(appConf.clusterManagerURL, walletAddress, result.nodeURL)
 	}
 }
 
