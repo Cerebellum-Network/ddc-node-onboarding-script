@@ -38,7 +38,7 @@ export function generateConfig(
 		},
 		blockchain: {
 			'api-url': blockChainConfig.apiURL,
-			'secret-phrase': blockChainConfig.secretPhrase,
+			'secret-phrase': `${blockChainConfig.secretPhrase}`,
 			'ddc-bucket-contract': blockChainConfig.ddcBucketContract,
 			'activity-capture-contract': blockChainConfig.activityCaptureContract,
 		},
