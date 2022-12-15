@@ -24,7 +24,7 @@ export async function downloadAndStartDockerImage(
 	await runCommand('docker', [
 		...['run', '-d'], // such wired syntax is used to avoid pretifier format and keep params in pairs
 		...['--name', containerName],
-		...['-p', `${port}:8080`],
+		...['-p', `${port}:${port}`],
 		...['-p', '5000:5000'],
 		...['-v', `${nodeStoragePath}:/data:rw`],
 		...['-v', `${nodeConfigPath}:/ddc-cdn-node/config:rw`],

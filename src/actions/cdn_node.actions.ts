@@ -69,7 +69,7 @@ export async function cdnNodeActions(appConf: AppConfig, filePathConf: filePathC
 		nodeConfig = await fillNodeConfig()
 	}
 	const storagePath = await getStoragePath()
-	appConf.blockchain.secretPhrase = seedPhrase
+	appConf.blockchain.secretPhrase = seedPhrase.trim()
 
 	showInfo('Config generated. Generating config file...')
 	// generate config file
