@@ -1,7 +1,7 @@
 {
 	"name": "@cere/ddc-onboarding-cli",
 	"description": "Cerebellum Network DDC onboard tool",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"repository": "git@github.com:Cerebellum-Network/ddc_onboarding_cli.git",
 	"author": "Alejandro <abergasov@gmail.com>",
 	"license": "MIT",
